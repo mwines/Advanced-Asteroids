@@ -27,6 +27,7 @@
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
+#include "struct.h"
 #include "ppm.h"
 #include "solidSphere.h"
 extern "C" {
@@ -94,7 +95,7 @@ Ppmimage *bgImage=NULL;
 GLuint bgTexture;
 GLuint shipTexture;
 int play_sounds = 0;
-
+/*
 struct Ship {
     Vec dir;
     Vec pos;
@@ -167,7 +168,7 @@ struct Game {
         aTimer = 0;
     }
 };
-
+*/
 
 int keys[65536];
 
