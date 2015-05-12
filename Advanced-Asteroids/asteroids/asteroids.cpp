@@ -26,9 +26,9 @@
 #include <cmath>
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
-#include <GL/glx.h>
+//#include <GL/glx.h>
 #include "struct.h"
-#include "ppm.h"
+//#include "ppm.h"
 #include "solidSphere.h"
 extern "C" {
 #include "fonts.h"
@@ -40,6 +40,7 @@ extern "C" {
 #include <FMOD/wincompat.h>
 #include "fmod.h"
 #endif
+#include "michaelW.cpp"
 
 using namespace std;
 
@@ -90,10 +91,10 @@ void timeCopy(struct timespec *dest, struct timespec *source) {
 
 int xres=1250, yres=900;
 
-Ppmimage *shipImage=NULL;
+//Ppmimage *shipImage=NULL;
 Ppmimage *bgImage=NULL;
 GLuint bgTexture;
-GLuint shipTexture;
+//GLuint shipTexture;
 int play_sounds = 0;
 /*
 struct Ship {
@@ -188,6 +189,7 @@ int main(void)
 {
     initXWindows();
     init_opengl();
+    getShipTexture();
     init_sounds();
     Game game;
     srand(time(NULL));
@@ -339,10 +341,10 @@ void init_opengl(void)
     initialize_fonts();
     //load image background
     bgImage = ppm6GetImage((char*)"./images/AA_background.ppm");
-    shipImage = ppm6GetImage((char*)"./images/ship.ppm");
-    glGenTextures(1, &shipTexture);
-    glBindTexture(GL_TEXTURE_2D, shipTexture);
-    gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, shipImage->width, shipImage->height, GL_RGB, GL_UNSIGNED_BYTE, shipImage->data);
+   // shipImage = ppm6GetImage((char*)"./images/ship.ppm");
+   // glGenTextures(1, &shipTexture);
+  //  glBindTexture(GL_TEXTURE_2D, shipTexture);
+  //  gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, shipImage->width, shipImage->height, GL_RGB, GL_UNSIGNED_BYTE, shipImage->data);
     //   glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
     //  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     //  glTexImage2D(GL_TEXTURE_2D, 0, 3,
@@ -864,7 +866,8 @@ void render(Game *g)
     } else { 
         glColor3fv(g->ship.color);
     }
-    glPushMatrix();
+    setShipTexture(g);
+   /* glPushMatrix();
     glTranslatef(g->ship.pos[0], g->ship.pos[1], g->ship.pos[2]);
     //float angle = atan2(ship.dir[1], ship.dir[0]);
     glBindTexture(GL_TEXTURE_2D, shipTexture);
@@ -877,7 +880,7 @@ void render(Game *g)
     glVertex2f(  0.0f, 20.0f);  glTexCoord2f(0.5f, 0.8f);
     glVertex2f( 12.0, -10.0f);  glTexCoord2f(1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-    glEnd();
+    glEnd();*/
     glColor3f(1.0f,0.0f,0.0f);
     glBegin(GL_POINTS);
     glVertex2f(0.0f,0.0f);
