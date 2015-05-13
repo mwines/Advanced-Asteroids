@@ -26,11 +26,10 @@
 #include <cmath>
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
-#include <GL/glx.h>
-#include "ppm.h"
 #include "solidSphere.h"
 #include "structures.h"
 #include "drewC.cpp"
+#include "michaelW.cpp"
 #include "joannT.cpp"
 extern "C" {
 #include "fonts.h"
@@ -72,8 +71,6 @@ void timeCopy(struct timespec *dest, struct timespec *source) {
 
 int xres=1250, yres=900;
 
-Ppmimage *shipImage=NULL;
-GLuint shipTexture;
 int play_sounds = 0;
 
 int keys[65536];
@@ -96,6 +93,7 @@ int main(void)
     initXWindows();
     init_opengl();
     init_sounds();
+    getShipTexture();
     Game game;
     srand(time(NULL));
     int done=0;
@@ -271,11 +269,6 @@ void init_opengl(void)
     //Do this to allow fonts
     glEnable(GL_TEXTURE_2D);
     initialize_fonts();
-    shipImage = ppm6GetImage((char*)"./images/ship.ppm");
-    glGenTextures(1, &shipTexture);
-    glBindTexture(GL_TEXTURE_2D, shipTexture);
-    gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, shipImage->width, shipImage->height, GL_RGB, GL_UNSIGNED_BYTE, shipImage->data);
-
     load_background();
 }
 
@@ -723,20 +716,8 @@ void render(Game *g)
     } else { 
 	glColor3fv(g->ship.color);
     }
-    glPushMatrix();
-    glTranslatef(g->ship.pos[0], g->ship.pos[1], g->ship.pos[2]);
     //float angle = atan2(ship.dir[1], ship.dir[0]);
-    glBindTexture(GL_TEXTURE_2D, shipTexture);
-    glRotatef(g->ship.angle, 0.0f, 0.0f, 1.0f);
-    glBegin(GL_TRIANGLES); //TRIANGLES
-    glVertex2f(-12.0f, -10.0f); glTexCoord2f(0.0f, 1.0f);
-    glVertex2f(  0.0f, 20.0f);  glTexCoord2f(0.5f, 0.6f);
-    glVertex2f(  0.0f, -6.0f);  glTexCoord2f(0.4f, 0.8f);
-    glVertex2f(  0.0f, -6.0f);  glTexCoord2f(0.6f, 0.6f);
-    glVertex2f(  0.0f, 20.0f);  glTexCoord2f(0.5f, 0.8f);
-    glVertex2f( 12.0, -10.0f);  glTexCoord2f(1.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-    glEnd();
+    setShipTexture(g);
     glColor3f(1.0f,0.0f,0.0f);
     glBegin(GL_POINTS);
     glVertex2f(0.0f,0.0f);
